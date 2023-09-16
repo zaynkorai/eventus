@@ -15,8 +15,10 @@ import (
 
 	"github.com/zaynkorai/eventus/pkg/utl/mysql"
 	"github.com/zaynkorai/eventus/pkg/utl/server"
+	"github.com/zaynkorai/eventus/pkg/utl/zlog"
 
 	"github.com/zaynkorai/eventus/pkg/api/event"
+	eventLogging "github.com/zaynkorai/eventus/pkg/api/event/logging"
 	eventTransport "github.com/zaynkorai/eventus/pkg/api/event/transport"
 )
 
@@ -29,11 +31,12 @@ func Start() error {
 	if err != nil {
 		return err
 	}
+	log := zlog.New()
 
 	e := server.New()
 	v1 := e.Group("/v1")
 
-	eventTransport.NewHTTP(event.Initialize(db), v1)
+	eventTransport.NewHTTP(eventLogging.New(event.Initialize(db), log), v1)
 
 	server.Start(e, &server.Config{
 		Port:                serverPort,
