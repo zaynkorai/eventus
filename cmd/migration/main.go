@@ -22,7 +22,7 @@ func main() {
 	db.Logger = logger.Default.LogMode(logger.Info)
 
 	log.Println("Running Migrations")
-	db.AutoMigrate(&eventus.Event{})
+	db.AutoMigrate(&eventus.Event{}, &eventus.User{})
 
 	log.Println("🚀 Connected Successfully to the Database")
 }
